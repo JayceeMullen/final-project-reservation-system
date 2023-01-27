@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using ReservationAPI.Models;
 
 namespace ReservationAPI.Controllers;
 

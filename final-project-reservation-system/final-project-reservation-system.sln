@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReservationAPI", "ReservationAPI\ReservationAPI.csproj", "{F6384685-1934-4620-9F7A-6C0A684DF98A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReservationAPITest", "ReservationAPITest\ReservationAPITest.csproj", "{59DE49CA-D722-4000-84FC-2D528E5044D6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReservationAPITest", "ReservationAPITest\ReservationAPITest.csproj", "{FB041EAE-0753-4429-B0CA-56EF32E4E9F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,9 +14,9 @@ Global
 		{F6384685-1934-4620-9F7A-6C0A684DF98A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6384685-1934-4620-9F7A-6C0A684DF98A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6384685-1934-4620-9F7A-6C0A684DF98A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{59DE49CA-D722-4000-84FC-2D528E5044D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{59DE49CA-D722-4000-84FC-2D528E5044D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{59DE49CA-D722-4000-84FC-2D528E5044D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{59DE49CA-D722-4000-84FC-2D528E5044D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB041EAE-0753-4429-B0CA-56EF32E4E9F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB041EAE-0753-4429-B0CA-56EF32E4E9F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB041EAE-0753-4429-B0CA-56EF32E4E9F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB041EAE-0753-4429-B0CA-56EF32E4E9F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

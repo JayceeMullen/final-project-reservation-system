@@ -30,8 +30,8 @@ public class ReservationsDao : IReservationsDao
         
         using IDbConnection connection = _context.CreateConnection();
         var parameters = new DynamicParameters();
-        parameters.Add("LocationID", reservationRequest.LocationId, DbType.Int32);
-        parameters.Add("CustomerID", reservationRequest.CustomerId, DbType.Int32);
+        parameters.Add("LocationID", reservationRequest.LocationId, DbType.Guid);
+        parameters.Add("CustomerID", reservationRequest.CustomerId, DbType.Guid);
         parameters.Add("NumberOfGuests", reservationRequest.NumberOfPeople, DbType.Int32);
         parameters.Add("Start", reservationRequest.ReservationStartDateTime, DbType.DateTime);
         parameters.Add("End", reservationRequest.ReservationEndDateTime, DbType.DateTime);

@@ -37,7 +37,7 @@ public class CustomerDao : ICustomerDao
     }
     public async Task<Customer> GetCustomerByPhoneNumber(string phonenumber)
     {
-        var query = $"SELECT * FROM Customers WHERE PhoneNumber = {phonenumber}";
+        var query = $"SELECT * FROM Customers WHERE PhoneNumber  LIKE '%{phonenumber}%' ";
 
         using IDbConnection connection = _context.CreateConnection();
         {
@@ -52,7 +52,7 @@ public class CustomerDao : ICustomerDao
 
     public async Task DeleteCustomer(string phonenumber)
     {
-        var query = $"DELETE FROM Customers WHERE PhoneNumber = {phonenumber}";
+        var query = $"DELETE FROM Customers WHERE PhoneNumber LIKE '%{phonenumber}%' ";
 
         using IDbConnection connection = _context.CreateConnection();
         {

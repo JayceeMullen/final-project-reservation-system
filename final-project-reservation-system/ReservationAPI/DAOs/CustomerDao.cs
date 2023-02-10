@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using Castle.Core.Resource;
 using Dapper;
 using ReservationAPI.Interfaces;
 using ReservationAPI.Models;
@@ -37,7 +38,7 @@ public class CustomerDao : ICustomerDao
     }
     public async Task<Customer> GetCustomerByPhoneNumber(string phonenumber)
     {
-        var query = $"SELECT * FROM Customers WHERE PhoneNumber = {phonenumber}";
+        var query = $"SELECT * FROM Customers WHERE PhoneNumber LIKE '%{phonenumber}%'";
 
         using IDbConnection connection = _context.CreateConnection();
         {
@@ -48,11 +49,27 @@ public class CustomerDao : ICustomerDao
 
     //UPDATE
 
+    public async Task UpdateCustomerByPhoneNumber(Customer updateRequest)
+    {
+        var query = "UPDATE Customer SET CustomerID=@customerid, Name=@name, PhoneNumber=@phonenumber, Email=@email WHERE PhoneNumber = @phonenumber";
+
+        using IDbConnection connection = _context.CreateConnection();
+
+        var parameters = new DynamicParameters();
+        parameters.Add("CustomerID", updateRequest.PhoneNumber, DbType.Guid);
+        parameters.Add("Name", updateRequest.PhoneNumber, DbType.String);
+        parameters.Add("PhoneNumber", updateRequest.PhoneNumber, DbType.String);
+        parameters.Add("Email", updateRequest.PhoneNumber, DbType.String);
+
+        await connection.ExecuteAsync(query, parameters);
+
+    }
+
     //DELETE
 
     public async Task DeleteCustomer(string phonenumber)
     {
-        var query = $"DELETE FROM Customers WHERE PhoneNumber = {phonenumber}";
+        var query = $"DELETE FROM Customers WHERE PhoneNumber = '{phonenumber}'";
 
         using IDbConnection connection = _context.CreateConnection();
         {

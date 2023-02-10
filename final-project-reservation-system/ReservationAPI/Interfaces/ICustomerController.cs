@@ -8,5 +8,6 @@ internal interface ICustomerController
     Task<IActionResult> GetCustomers();
     Task<IActionResult> GetCustomerByPhoneNumber([FromRoute] string phonenumber);
     Task<IActionResult> DeleteCustomer([FromRoute] string phonenumber);
+    Task<IActionResult> UpdateCustomerByPhoneNumber([FromBody] Customer updateRequest);
 
     }

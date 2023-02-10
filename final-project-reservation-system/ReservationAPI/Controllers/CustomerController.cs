@@ -50,12 +50,12 @@ namespace ReservationAPI.Controllers
         }
 
         [HttpGet]
-        [Route("Customer/{PhoneNumber}")]
-        public async Task<IActionResult> GetCustomerByPhoneNumber([FromRoute] string phonenumber)
+        [Route("{phoneNumber}")]
+        public async Task<IActionResult> GetCustomerByPhoneNumber([FromRoute] string phoneNumber)
         {
             try
             {
-                var customer = await _customerDao.GetCustomerByPhoneNumber(phonenumber);
+                var customer = await _customerDao.GetCustomerByPhoneNumber(phoneNumber);
                 if (customer == null)
                 {
                     return StatusCode(404);
@@ -68,22 +68,43 @@ namespace ReservationAPI.Controllers
             }
         }
 
-        //UPDATE
+        //UPDATE - CHECK THIS!
 
-        //DELETE
-
-        [HttpDelete]
-        [Route("Customer/{PhoneNumber}")]
-        public async Task<IActionResult> DeleteCustomer([FromRoute] string phonenumber)
+        [HttpPut]
+        [Route("{phoneNumber}")]
+        public async Task<IActionResult> UpdateCustomerByPhoneNumber([FromBody] Customer updateRequest)
         {
             try
             {
-                var customer = await _customerDao.GetCustomerByPhoneNumber(phonenumber);
+                var customer = await _customerDao.GetCustomerByPhoneNumber(updateRequest.PhoneNumber);
                 if (customer == null)
                 {
                     return StatusCode(404);
                 }
-                await _customerDao.DeleteCustomer(phonenumber);
+                await _customerDao.UpdateCustomerByPhoneNumber(updateRequest);
+                return StatusCode(204);
+            }
+            catch (Exception e) 
+            {
+            return StatusCode(500, e.Message);
+            }
+        }
+
+
+        //DELETE
+
+        [HttpDelete]
+        [Route("{phoneNumber}")]
+        public async Task<IActionResult> DeleteCustomer([FromRoute] string phoneNumber)
+        {
+            try
+            {
+                var customer = await _customerDao.GetCustomerByPhoneNumber(phoneNumber);
+                if (customer == null)
+                {
+                    return StatusCode(404);
+                }
+                await _customerDao.DeleteCustomer(phoneNumber);
                 return StatusCode(200);
             }
             catch (Exception e)

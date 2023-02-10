@@ -8,6 +8,7 @@ namespace ReservationAPI.Interfaces
         Task<IEnumerable<Customer>> GetCustomers();
         Task<Customer> GetCustomerByPhoneNumber(string phonenumber);
         Task DeleteCustomer(string phonenumber);
+        Task UpdateCustomerByPhoneNumber(Customer updateRequest);
 
     }
 }

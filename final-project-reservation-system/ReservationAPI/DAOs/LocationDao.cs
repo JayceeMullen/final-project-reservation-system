@@ -16,18 +16,18 @@ public class LocationDao : ILocationDao
     }
 
     //CREATE
-    public async Task CreateLocation(Location newLocation)
+    public async Task CreateLocation(LocationRequest newLocation)
     {
-        const string query = "INSERT INTO Locations (LocationID, Name, Capacity, OpenTime, CloseTime) VALUES (@locationid, @name, @capacity, @opentime, @closetime)";
+        const string query = "INSERT INTO Locations (LocationID, Name, Capacity, OpenTime, CloseTime) VALUES (NEWID(), @Name, @Capacity, @OpenTime, @CloseTime)";
         
         using IDbConnection connection = _context.CreateConnection();
 
         var parameters = new DynamicParameters();
-        parameters.Add("LocationID", newLocation.LocationID, DbType.Guid);
+
         parameters.Add("Name", newLocation.Name, DbType.String);
         parameters.Add("Capacity", newLocation.Capacity, DbType.Int16);
-        parameters.Add("OpenTime", newLocation.OpenTime, DbType.Time);
-        parameters.Add("CloseTime", newLocation.CloseTime, DbType.Time);
+        parameters.Add("OpenTime", newLocation.OpenTime, DbType.String);
+        parameters.Add("CloseTime", newLocation.CloseTime, DbType.String);
 
         await connection.ExecuteAsync(query, parameters);
     }

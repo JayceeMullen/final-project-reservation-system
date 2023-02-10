@@ -19,7 +19,7 @@ public class LocationController : ControllerBase, ILocationController
     //CREATE
     [HttpPost]
     [Route("")]
-    public async Task<IActionResult> CreateLocation([FromBody] Location newLocation)
+    public async Task<IActionResult> CreateLocation([FromBody] LocationRequest newLocation)
     {
         try
         {

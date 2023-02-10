@@ -4,6 +4,6 @@ namespace ReservationAPI.Interfaces
 {
     public interface ILocationDao
     {
-        Task CreateLocation(Location newLocation);
+        Task CreateLocation(LocationRequest newLocation);
     }
 }

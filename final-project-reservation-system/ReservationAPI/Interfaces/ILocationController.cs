@@ -5,6 +5,6 @@ namespace ReservationAPI.Interfaces;
 
 internal interface ILocationController
     {
-    Task<IActionResult> CreateLocation([FromBody] Location newLocation);
+    Task<IActionResult> CreateLocation([FromBody] LocationRequest newLocation);
 
     }

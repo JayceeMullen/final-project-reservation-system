@@ -31,7 +31,14 @@ public class LocationDao : ILocationDao
 
         await connection.ExecuteAsync(query, parameters);
     }
-    //UPDATE
+    //READ
+    public async Task<IEnumerable<Location>> GetLocation()
+    {
+        const string query = "SELECT * FROM Locations";
+        using IDbConnection connection = _context.CreateConnection();
+        IEnumerable<Location> locations = await connection.QueryAsync<Location>(query);
+        return locations.ToList();
+    }
 
     //UPDATE
 

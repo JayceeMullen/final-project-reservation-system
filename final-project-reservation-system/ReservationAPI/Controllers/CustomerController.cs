@@ -20,7 +20,7 @@ namespace ReservationAPI.Controllers
         //CREATE
         [HttpPost]
         [Route("")]
-        public async Task<IActionResult> CreateCustomer([FromBody] Customer newCustomer)
+        public async Task<IActionResult> CreateCustomer([FromBody] CustomerRequest newCustomer)
         {
             try
             {
@@ -71,22 +71,17 @@ namespace ReservationAPI.Controllers
         //UPDATE - CHECK THIS!
 
         [HttpPut]
-        [Route("{phoneNumber}")]
-        public async Task<IActionResult> UpdateCustomerByPhoneNumber([FromBody] Customer updateRequest)
+        [Route("/UpdateByPhoneNumber/{phoneNumber}")]
+        public async Task<IActionResult> UpdateCustomerByPhoneNumber([FromRoute] string phoneNumber, [FromBody] CustomerRequest customerRequest)
         {
             try
             {
-                var customer = await _customerDao.GetCustomerByPhoneNumber(updateRequest.PhoneNumber);
-                if (customer == null)
-                {
-                    return StatusCode(404);
-                }
-                await _customerDao.UpdateCustomerByPhoneNumber(updateRequest);
+                await _customerDao.UpdateCustomerByPhoneNumber(phoneNumber, customerRequest);
                 return StatusCode(204);
             }
             catch (Exception e) 
             {
-            return StatusCode(500, e.Message);
+                return StatusCode(500, e.Message);
             }
         }
 

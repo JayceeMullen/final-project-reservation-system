@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using Castle.Core.Resource;
+﻿using System.Data;
 using Dapper;
 using ReservationAPI.Interfaces;
 using ReservationAPI.Models;
@@ -16,12 +14,12 @@ public class CustomerDao : ICustomerDao
     }
 
     //CREATE
-    public async Task CreateCustomer(Customer newCustomer)
+    public async Task CreateCustomer(CustomerRequest newCustomer)
     {
-        const string query = "INSERT INTO Customers (CustomerID, Name, PhoneNumber, Email) VALUES (@customerid, @name, @phonenumber, @email)";
+        const string query = "INSERT INTO Customers (CustomerID, Name, PhoneNumber, Email) VALUES (NEWID(), @Name, @PhoneNumber, @Email)";
+        
         using IDbConnection connection = _context.CreateConnection();
         var parameters = new DynamicParameters();
-        parameters.Add("CustomerID", newCustomer.CustomerID, DbType.Guid);
         parameters.Add("Name", newCustomer.Name, DbType.String);
         parameters.Add("PhoneNumber", newCustomer.PhoneNumber, DbType.String);
         parameters.Add("Email", newCustomer.Email, DbType.String);
@@ -36,9 +34,9 @@ public class CustomerDao : ICustomerDao
         IEnumerable<Customer> customers = await connection.QueryAsync<Customer>(query);
         return customers.ToList();
     }
-    public async Task<Customer> GetCustomerByPhoneNumber(string phonenumber)
+    public async Task<Customer> GetCustomerByPhoneNumber(string phoneNumber)
     {
-        var query = $"SELECT * FROM Customers WHERE PhoneNumber  LIKE '%{phonenumber}%' ";
+        var query = $"SELECT * FROM Customers WHERE PhoneNumber  LIKE '%{phoneNumber}%' ";
 
         using IDbConnection connection = _context.CreateConnection();
         {
@@ -49,20 +47,21 @@ public class CustomerDao : ICustomerDao
 
     //UPDATE
 
-    public async Task UpdateCustomerByPhoneNumber(Customer updateRequest)
+    public async Task UpdateCustomerByPhoneNumber(string phoneNumber, CustomerRequest customerRequest)
     {
-        var query = "UPDATE Customer SET CustomerID=@customerid, Name=@name, PhoneNumber=@phonenumber, Email=@email WHERE PhoneNumber = @phonenumber";
+        Guid customerToUpdate = GetCustomerByPhoneNumber(phoneNumber).Result.CustomerID;
+
+        const string query = "UPDATE Customers SET Name = @Name, PhoneNumber = @PhoneNumber, Email = @Email WHERE CustomerID = @CustomerID";
 
         using IDbConnection connection = _context.CreateConnection();
 
         var parameters = new DynamicParameters();
-        parameters.Add("CustomerID", updateRequest.PhoneNumber, DbType.Guid);
-        parameters.Add("Name", updateRequest.PhoneNumber, DbType.String);
-        parameters.Add("PhoneNumber", updateRequest.PhoneNumber, DbType.String);
-        parameters.Add("Email", updateRequest.PhoneNumber, DbType.String);
+        parameters.Add("CustomerID", customerToUpdate, DbType.Guid);
+        parameters.Add("Name", customerRequest.Name, DbType.String);
+        parameters.Add("PhoneNumber", customerRequest.PhoneNumber, DbType.String);
+        parameters.Add("Email", customerRequest.Email, DbType.String);
 
         await connection.ExecuteAsync(query, parameters);
-
     }
 
     //DELETE
@@ -76,6 +75,4 @@ public class CustomerDao : ICustomerDao
             await connection.ExecuteAsync(query);
         }
     }
-
-
 }

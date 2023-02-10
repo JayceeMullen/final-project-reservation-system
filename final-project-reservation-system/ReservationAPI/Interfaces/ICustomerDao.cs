@@ -4,11 +4,11 @@ namespace ReservationAPI.Interfaces
 {
     public interface ICustomerDao
     {
-        Task CreateCustomer(Customer newCustomer);
+        Task CreateCustomer(CustomerRequest newCustomer);
         Task<IEnumerable<Customer>> GetCustomers();
         Task<Customer> GetCustomerByPhoneNumber(string phonenumber);
         Task DeleteCustomer(string phonenumber);
-        Task UpdateCustomerByPhoneNumber(Customer updateRequest);
+        Task UpdateCustomerByPhoneNumber(string phoneNumber, CustomerRequest customerRequest);
 
     }
 }

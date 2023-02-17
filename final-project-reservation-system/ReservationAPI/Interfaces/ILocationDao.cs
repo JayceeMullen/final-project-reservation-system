@@ -6,6 +6,9 @@ namespace ReservationAPI.Interfaces
     {
         Task CreateLocation(LocationRequest newLocation);
         Task<IEnumerable<Location>> GetLocation();
+        Task<Location> GetLocationByName(string name);
+        Task DeleteLocation(string name);
+        Task UpdateLocationByName(string name, LocationRequest locationRequest);
 
     }
 }

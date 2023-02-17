@@ -40,7 +40,43 @@ public class LocationDao : ILocationDao
         return locations.ToList();
     }
 
+    public async Task<Location> GetLocationByName(string name)
+    {
+        var query = $"SELECT * FROM Locations WHERE Name LIKE '%{name}%'";
+        using IDbConnection connection = _context.CreateConnection();
+        {
+            var location = await connection.QueryFirstOrDefaultAsync<Location>(query).ConfigureAwait(false);
+            return location;
+        }
+    }
+
     //UPDATE
 
+    public async Task UpdateLocationByName(string name, LocationRequest locationRequest)
+    {
+        Guid locationToUpdate = GetLocationByName(name).Result.LocationID;
+
+        const string query = "UPDATE Locations SET Name = @Name, Capacity = @Capacity, OpenTime = @OpenTime, CloseTime = @CloseTime";
+        using IDbConnection connection = _context.CreateConnection();
+        var parameters = new DynamicParameters();
+
+        parameters.Add("LocationID", locationToUpdate, DbType.Guid);
+        parameters.Add("Name", locationRequest.Name, DbType.String);
+        parameters.Add("Capacity", locationRequest.Capacity, DbType.Int16);
+        parameters.Add("OpenTime", locationRequest.OpenTime, DbType.String);
+        parameters.Add("CloseTime", locationRequest.CloseTime, DbType.String);
+
+        await connection.ExecuteAsync(query, parameters);
+    }
+
     //DELETE
+
+    public async Task DeleteLocation(string name)
+    {
+        var query = $"DELETE FROM Locations WHERE Name LIKE %'{name}'%";
+        using IDbConnection connection = _context.CreateConnection();
+        {
+            await connection.ExecuteAsync(query);
+        }
+    }
 }

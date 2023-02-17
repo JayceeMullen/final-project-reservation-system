@@ -17,6 +17,7 @@ public class Startup
         {
             services.AddSingleton<ReservationContext>();
             services.AddScoped<ReservationsDao>();
+            services.AddScoped<LocationDao>();
             services.AddControllers();
 
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo

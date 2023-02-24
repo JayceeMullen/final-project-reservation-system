@@ -6,6 +6,6 @@ public class Reservation
     public Guid LocationId { get; set; }
     public Guid CustomerId { get; set; }
     public int NumberOfPeople { get; set; }
-    public DateTime ReservationStartDateTime { get; set; }
-    public DateTime ReservationEndDateTime { get; set; }
+    
+    public DateTime ReservationDate { get; set; }
 }

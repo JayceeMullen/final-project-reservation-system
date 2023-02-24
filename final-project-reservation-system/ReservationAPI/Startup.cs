@@ -1,6 +1,7 @@
 ﻿using Microsoft.OpenApi.Models;
 using ReservationAPI.DAOs;
 
+
 namespace ReservationAPI;
 
 public class Startup
@@ -18,6 +19,7 @@ public class Startup
             services.AddSingleton<ReservationContext>();
             services.AddScoped<ReservationsDao>();
             services.AddScoped<LocationDao>();
+            services.AddScoped<CustomerDao>();
             services.AddControllers();
 
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo

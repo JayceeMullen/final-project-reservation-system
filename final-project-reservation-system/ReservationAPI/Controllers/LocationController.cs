@@ -83,6 +83,20 @@ public class LocationController : ControllerBase, ILocationController
             return StatusCode(500, e.Message);
         }
     }
+    [HttpPatch]
+    [Route("/PatchByName/{name}")]
+    public async Task<IActionResult> PatchLocationByName([FromRoute] string name, [FromQuery] string? newName, [FromQuery] int? newCapacity)
+    {
+        try
+        {
+            await _locationDao.PatchLocationByName(name, newName, newCapacity);
+            return StatusCode(204);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, e.Message);
+        }
+    }
 
     //DELETE
 

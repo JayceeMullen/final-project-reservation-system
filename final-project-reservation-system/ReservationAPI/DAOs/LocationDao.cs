@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Text;
 using Castle.Core.Resource;
 using Dapper;
 using ReservationAPI.Interfaces;
@@ -63,6 +64,27 @@ public class LocationDao : ILocationDao
         parameters.Add("Capacity", locationRequest.Capacity, DbType.Int16);
 
         await connection.ExecuteAsync(query, parameters);
+    }
+    
+    public async Task PatchLocationByName(string name, string? newName, int? newCapacity)
+    {
+        var sb = new StringBuilder();
+        sb.Append("UPDATE Locations SET ");
+        if (newName != null)
+        {
+            sb.Append($"Name = '{newName}'");
+        }
+        if (newCapacity != null)
+        {
+            sb.Append($"Capacity = '{newCapacity}'");
+        }
+        sb.Append($"WHERE Name LIKE '%{name}%'");
+
+        var query = sb.ToString();
+        using IDbConnection connection = _context.CreateConnection();
+        {
+            await connection.ExecuteAsync(query);
+        }
     }
 
     //DELETE

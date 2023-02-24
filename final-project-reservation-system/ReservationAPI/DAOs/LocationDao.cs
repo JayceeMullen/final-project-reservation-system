@@ -18,7 +18,7 @@ public class LocationDao : ILocationDao
     //CREATE
     public async Task CreateLocation(LocationRequest newLocation)
     {
-        const string query = "INSERT INTO Locations (LocationID, Name, Capacity, OpenTime, CloseTime) VALUES (NEWID(), @Name, @Capacity, @OpenTime, @CloseTime)";
+        const string query = "INSERT INTO Locations (LocationID, Name, Capacity) VALUES (NEWID(), @Name, @Capacity)";
         
         using IDbConnection connection = _context.CreateConnection();
 
@@ -26,8 +26,6 @@ public class LocationDao : ILocationDao
 
         parameters.Add("Name", newLocation.Name, DbType.String);
         parameters.Add("Capacity", newLocation.Capacity, DbType.Int16);
-        parameters.Add("OpenTime", newLocation.OpenTime, DbType.String);
-        parameters.Add("CloseTime", newLocation.CloseTime, DbType.String);
 
         await connection.ExecuteAsync(query, parameters);
     }
@@ -56,15 +54,13 @@ public class LocationDao : ILocationDao
     {
         Guid locationToUpdate = GetLocationByName(name).Result.LocationID;
 
-        const string query = "UPDATE Locations SET Name = @Name, Capacity = @Capacity, OpenTime = @OpenTime, CloseTime = @CloseTime";
+        const string query = "UPDATE Locations SET Name = @Name, Capacity = @Capacity";
         using IDbConnection connection = _context.CreateConnection();
         var parameters = new DynamicParameters();
 
         parameters.Add("LocationID", locationToUpdate, DbType.Guid);
         parameters.Add("Name", locationRequest.Name, DbType.String);
         parameters.Add("Capacity", locationRequest.Capacity, DbType.Int16);
-        parameters.Add("OpenTime", locationRequest.OpenTime, DbType.String);
-        parameters.Add("CloseTime", locationRequest.CloseTime, DbType.String);
 
         await connection.ExecuteAsync(query, parameters);
     }
@@ -73,7 +69,7 @@ public class LocationDao : ILocationDao
 
     public async Task DeleteLocation(string name)
     {
-        var query = $"DELETE FROM Locations WHERE Name LIKE %'{name}'%";
+        var query = $"DELETE FROM Locations WHERE Name LIKE '%{name}%'";
         using IDbConnection connection = _context.CreateConnection();
         {
             await connection.ExecuteAsync(query);

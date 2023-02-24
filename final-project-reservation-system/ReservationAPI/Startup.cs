@@ -18,6 +18,7 @@ public class Startup
         {
             services.AddSingleton<ReservationContext>();
             services.AddScoped<ReservationsDao>();
+            services.AddScoped<LocationDao>();
             services.AddScoped<CustomerDao>();
             services.AddControllers();
 

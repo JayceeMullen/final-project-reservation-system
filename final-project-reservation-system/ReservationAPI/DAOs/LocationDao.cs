@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Text;
-using Castle.Core.Resource;
 using Dapper;
 using ReservationAPI.Interfaces;
 using ReservationAPI.Models;

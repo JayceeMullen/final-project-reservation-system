@@ -1,5 +1,4 @@
-﻿using Castle.Core.Resource;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ReservationAPI.DAOs;
 using ReservationAPI.Interfaces;
 using ReservationAPI.Models;
@@ -83,6 +82,7 @@ public class LocationController : ControllerBase, ILocationController
             return StatusCode(500, e.Message);
         }
     }
+
     [HttpPatch]
     [Route("/PatchByName/{name}")]
     public async Task<IActionResult> PatchLocationByName([FromRoute] string name, [FromQuery] string? newName, [FromQuery] int? newCapacity)

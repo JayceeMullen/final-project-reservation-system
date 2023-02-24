@@ -17,8 +17,7 @@ public class ReservationsDao_GetReservationsShould
             LocationId = new Guid(),
             CustomerId = new Guid(),
             NumberOfPeople = 1,
-            ReservationStartDateTime = new DateTime(2021, 1, 1),
-            ReservationEndDateTime = new DateTime(2021, 1, 1)
+            ReservationDate = new DateTime(2021, 1, 1)
         };
 
         // Act

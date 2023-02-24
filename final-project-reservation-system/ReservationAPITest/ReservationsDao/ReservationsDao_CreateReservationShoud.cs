@@ -17,8 +17,7 @@ public class ReservationsDao_CreateReservationShould
             CustomerId = new Guid(),   
             LocationId = new Guid(),
             NumberOfPeople = 1,
-            ReservationStartDateTime = DateTime.Now,
-            ReservationEndDateTime = DateTime.Now
+            ReservationDate = DateTime.Now
         };
 
         // Act

@@ -2,6 +2,7 @@
 using ReservationAPI.DAOs;
 using ReservationAPI.Interfaces;
 using ReservationAPI.Models;
+using System.Data;
 
 namespace ReservationAPI.Controllers;
 
@@ -18,7 +19,7 @@ public class TimeSlotsController : ControllerBase, ITimeSlotsController
 
     //CREATE
     [HttpPost]
-    [Route("")]
+    [Route("{name}")]
     public async Task<IActionResult> CreateTimeSlot([FromRoute] string name, [FromBody] TimeSlotsRequest newTimeSlot)
     {
         try
@@ -33,9 +34,60 @@ public class TimeSlotsController : ControllerBase, ITimeSlotsController
     }
 
     //READ
+    [HttpGet]
+    [Route("")]
+    public async Task<IActionResult> GetTimeSlots()
+    {
+        try
+        {
+            IEnumerable<TimeSlots> timeslots = await _timeSlotsDao.GetTimeSlots();
+            return Ok(timeslots);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, e.Message);
+        }
+    }
 
     //UPDATE
 
     //DELETE
 
+    [HttpDelete]
+    [Route("DeleteSpecificTimeSlots/{name}/{slotStartTime}")]
+    public async Task<IActionResult> DeleteSpecificTimeSlots([FromRoute] string name, string slotStartTime)
+    {
+        try
+        {
+            if (name == null)
+            {
+                return StatusCode(404);
+            }
+            await _timeSlotsDao.DeleteSpecificTimeSlots(name, slotStartTime);
+            return StatusCode(200);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, e.Message);
+        }
+    }
+
+    [HttpDelete]
+    [Route("DeleteAllTimeSlotsByLocation/{name}")]
+    public async Task<IActionResult> DeleteAllTimeSlotsByLocation([FromRoute] string name)
+    {
+        try
+        {
+            if (name == null)
+            {
+                return StatusCode(404);
+            }
+            await _timeSlotsDao.DeleteAllTimeSlotsByLocation(name);
+            return StatusCode(200);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, e.Message);
+        }
+    }
 }   

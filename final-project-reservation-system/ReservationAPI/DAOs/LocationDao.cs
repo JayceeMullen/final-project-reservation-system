@@ -90,6 +90,7 @@ public class LocationDao : ILocationDao
     public async Task DeleteLocation(string name)
     {
         var query = $"DELETE FROM Locations WHERE Name LIKE '%{name}%'";
+
         using IDbConnection connection = _context.CreateConnection();
         {
             await connection.ExecuteAsync(query);

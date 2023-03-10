@@ -26,14 +26,44 @@ public class TimeSlotsDao : ITimeSlotsDao
         var parameters = new DynamicParameters();
 
         parameters.Add("LocationID", locationId, DbType.Guid);
-        parameters.Add("SlotStartTime", newTimeSlot.SlotStartTime, DbType.String);
+        parameters.Add("SlotStartTime", newTimeSlot.SlotStartTime, DbType.String) ;
 
         await connection.ExecuteAsync(query, parameters);
     }
     //READ
 
+    public async Task<IEnumerable<TimeSlots>> GetTimeSlots()
+    {
+        const string query = "SELECT * FROM LocationTimeSlots";
+        using IDbConnection connection = _context.CreateConnection();
+        IEnumerable<TimeSlots> timeslots = await connection.QueryAsync<TimeSlots>(query);
+        return timeslots.ToList();
+    }
+
     //UPDATE
 
     //DELETE
 
+    public async Task DeleteSpecificTimeSlots(string name, string slotStartTime)
+    {
+        Guid locationId = _locationDao.GetLocationByName(name).Result.LocationID;
+
+        var query = $"DELETE FROM LocationTimeSlots WHERE LocationID LIKE '%{locationId}%' AND SlotStartTime LIKE '%{slotStartTime}%'";
+        using IDbConnection connection = _context.CreateConnection();
+        {
+            await connection.ExecuteAsync(query);
+        }
+    }
+
+    public async Task DeleteAllTimeSlotsByLocation(string name)
+    {
+        Guid locationId = _locationDao.GetLocationByName(name).Result.LocationID;
+
+        var query = $"DELETE FROM LocationTimeSlots WHERE LocationID LIKE '%{locationId}%'";
+
+        using IDbConnection connection = _context.CreateConnection();
+        {
+            await connection.ExecuteAsync(query);
+        }
+    }
 }

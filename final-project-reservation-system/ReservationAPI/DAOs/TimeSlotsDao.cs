@@ -30,14 +30,30 @@ public class TimeSlotsDao : ITimeSlotsDao
 
         await connection.ExecuteAsync(query, parameters);
     }
+
     //READ
 
     public async Task<IEnumerable<TimeSlots>> GetTimeSlots()
+
     {
         const string query = "SELECT * FROM LocationTimeSlots";
         using IDbConnection connection = _context.CreateConnection();
-        IEnumerable<TimeSlots> timeslots = await connection.QueryAsync<TimeSlots>(query);
+        var test = await connection.QueryAsync<TimeSlots>(query);
+        IEnumerable<TimeSlots> timeslots = new List<TimeSlots>();
         return timeslots.ToList();
+    }
+
+    public async Task<IEnumerable<TimeSlots>> GetTimeSlotsByLocation(string name)
+    {
+        Guid locationId = _locationDao.GetLocationByName(name).Result.LocationID;
+
+        string query = $"SELECT * FROM LocationTimeSlots WHERE LocationID LIKE '%{locationId}%'";
+
+        using IDbConnection connection = _context.CreateConnection();
+        {
+            IEnumerable<TimeSlots> timeslotsbylocation = await connection.QueryAsync<TimeSlots>(query);
+            return timeslotsbylocation.ToList();
+        }
     }
 
     //UPDATE

@@ -11,4 +11,5 @@ internal interface ITimeSlotsController
 
     Task<IActionResult> DeleteSpecificTimeSlots([FromRoute] string name, [FromBody] string slotStartTime);
     Task<IActionResult> DeleteAllTimeSlotsByLocation([FromRoute] string name);
+    Task<IActionResult> GetTimeSlotsByLocation([FromRoute] string name);
 }

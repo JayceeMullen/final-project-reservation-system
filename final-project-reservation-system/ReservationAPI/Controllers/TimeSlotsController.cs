@@ -49,6 +49,25 @@ public class TimeSlotsController : ControllerBase, ITimeSlotsController
         }
     }
 
+    [HttpGet]
+    [Route("GetTimeSlotsByLocation/{name}")]
+    public async Task<IActionResult> GetTimeSlotsByLocation([FromRoute] string name)
+    {
+        try
+        {
+            IEnumerable<TimeSlots> timeslotsbylocation = await _timeSlotsDao.GetTimeSlotsByLocation(name);
+            if (name == null)
+            {
+                return StatusCode(404);
+            }
+            return Ok(timeslotsbylocation);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, e.Message);
+        }
+    }
+
     //UPDATE
 
     //DELETE

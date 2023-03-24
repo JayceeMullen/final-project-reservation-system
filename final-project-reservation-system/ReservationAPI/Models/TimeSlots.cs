@@ -4,6 +4,6 @@
     {
         public Guid LocationTimeSlotID { get; set; }
         public Guid LocationID { get; set; }
-        public string SlotStartTime { get; set; }
+        public TimeSpan SlotStartTime { get; set; }
     }
 }

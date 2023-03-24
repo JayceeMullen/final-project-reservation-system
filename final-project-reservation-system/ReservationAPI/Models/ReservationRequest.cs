@@ -2,7 +2,7 @@
 
 public class ReservationRequest
 {
-    public Guid LocationId { get; set; }
+    public Guid LocationTimeSlotId { get; set; }
     public Guid CustomerId { get; set; }
     public int NumberOfPeople { get; set; }
     

@@ -2,7 +2,6 @@
 using ReservationAPI.DAOs;
 using ReservationAPI.Interfaces;
 using ReservationAPI.Models;
-using System.Data;
 
 namespace ReservationAPI.Controllers;
 
@@ -55,12 +54,8 @@ public class TimeSlotsController : ControllerBase, ITimeSlotsController
     {
         try
         {
-            IEnumerable<TimeSlots> timeslotsbylocation = await _timeSlotsDao.GetTimeSlotsByLocation(name);
-            if (name == null)
-            {
-                return StatusCode(404);
-            }
-            return Ok(timeslotsbylocation);
+            IEnumerable<TimeSlots> timeSlotsByLocation = await _timeSlotsDao.GetTimeSlotsByLocation(name);
+            return Ok(timeSlotsByLocation);
         }
         catch (Exception e)
         {
@@ -78,10 +73,6 @@ public class TimeSlotsController : ControllerBase, ITimeSlotsController
     {
         try
         {
-            if (name == null)
-            {
-                return StatusCode(404);
-            }
             await _timeSlotsDao.DeleteSpecificTimeSlots(name, slotStartTime);
             return StatusCode(200);
         }
@@ -97,10 +88,6 @@ public class TimeSlotsController : ControllerBase, ITimeSlotsController
     {
         try
         {
-            if (name == null)
-            {
-                return StatusCode(404);
-            }
             await _timeSlotsDao.DeleteAllTimeSlotsByLocation(name);
             return StatusCode(200);
         }

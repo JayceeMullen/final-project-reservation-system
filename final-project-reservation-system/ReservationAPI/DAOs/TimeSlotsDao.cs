@@ -7,7 +7,7 @@ namespace ReservationAPI.DAOs;
 public class TimeSlotsDao : ITimeSlotsDao
 {
     private readonly ReservationContext _context;
-    private readonly ILocationDao _locationDao;
+    private readonly LocationDao _locationDao;
     public TimeSlotsDao(ReservationContext context, LocationDao locationDao)
     {
         _context = context;
@@ -34,12 +34,10 @@ public class TimeSlotsDao : ITimeSlotsDao
     //READ
 
     public async Task<IEnumerable<TimeSlots>> GetTimeSlots()
-
     {
         const string query = "SELECT * FROM LocationTimeSlots";
         using IDbConnection connection = _context.CreateConnection();
-        var test = await connection.QueryAsync<TimeSlots>(query);
-        IEnumerable<TimeSlots> timeslots = new List<TimeSlots>();
+        IEnumerable<TimeSlots> timeslots = await connection.QueryAsync<TimeSlots>(query);
         return timeslots.ToList();
     }
 
@@ -47,12 +45,12 @@ public class TimeSlotsDao : ITimeSlotsDao
     {
         Guid locationId = _locationDao.GetLocationByName(name).Result.LocationID;
 
-        string query = $"SELECT * FROM LocationTimeSlots WHERE LocationID LIKE '%{locationId}%'";
+        var query = $"SELECT * FROM LocationTimeSlots WHERE LocationID LIKE '%{locationId}%'";
 
         using IDbConnection connection = _context.CreateConnection();
         {
-            IEnumerable<TimeSlots> timeslotsbylocation = await connection.QueryAsync<TimeSlots>(query);
-            return timeslotsbylocation.ToList();
+            IEnumerable<TimeSlots> timeSlotsByLocation = await connection.QueryAsync<TimeSlots>(query);
+            return timeSlotsByLocation.ToList();
         }
     }
 

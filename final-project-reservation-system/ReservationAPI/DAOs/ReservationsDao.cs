@@ -1,6 +1,5 @@
 ﻿using System.Data;
 using Dapper;
-using Microsoft.IdentityModel.Tokens;
 using ReservationAPI.Interfaces;
 using ReservationAPI.Models;
 
@@ -26,12 +25,12 @@ public class ReservationsDao : IReservationsDao
     public async Task CreateReservation(ReservationRequest reservationRequest)
     {
         const string query =
-            "INSERT INTO Reservations (LocationID, CustomerID, NumberOfGuests, ReservationDate)" 
-            + " VALUES (@LocationID, @CustomerID, @NumberOfGuests, @Date)";
+            "INSERT INTO Reservations (LocationTimeSlotID, CustomerID, NumberOfGuests, ReservationDate)" 
+            + " VALUES (@LocationTimeSlotID, @CustomerID, @NumberOfGuests, @Date)";
         
         using IDbConnection connection = _context.CreateConnection();
         var parameters = new DynamicParameters();
-        parameters.Add("LocationID", reservationRequest.LocationId, DbType.Guid);
+        parameters.Add("LocationTimeSlotID", reservationRequest.LocationTimeSlotId, DbType.Guid);
         parameters.Add("CustomerID", reservationRequest.CustomerId, DbType.Guid);
         parameters.Add("NumberOfGuests", reservationRequest.NumberOfPeople, DbType.Int32);
         parameters.Add("Date", reservationRequest.ReservationDate, DbType.DateTime);
@@ -68,14 +67,20 @@ public class ReservationsDao : IReservationsDao
         return reservations;
     }
 
-    public async Task<IEnumerable<Reservation>> GetReservationsByLocationId(Guid id)
+    public async Task<IEnumerable<Reservation>> GetReservationsByTimeSlotId(Guid id)
     {
-        const string query = "SELECT * FROM Reservations WHERE LocationID = @Id";
+        const string query = "SELECT * FROM Reservations WHERE LocationTimeSlotID = @Id";
         using IDbConnection connection = _context.CreateConnection();
         var parameters = new DynamicParameters();
         parameters.Add("Id", id, DbType.Guid);
         IEnumerable<Reservation> reservations = await connection.QueryAsync<Reservation>(query, parameters);
         return reservations.ToList();
+    }
+    
+    public async Task<IEnumerable<Reservation>> GetReservationsByLocationId(Guid id)
+    {
+        //TODO: Implement
+        throw new NotImplementedException();
     }
 
     public async Task UpdateReservation(Guid id, ReservationRequest reservationRequest)
@@ -86,12 +91,12 @@ public class ReservationsDao : IReservationsDao
             throw new Exception("Reservation not found");
         }
         const string query =
-            "UPDATE Reservations SET LocationID = @LocationID, CustomerID = @CustomerID, NumberOfGuests = @NumberOfGuests,"
+            "UPDATE Reservations SET LocationTimeSlotID = @LocationTimeSlotID, CustomerID = @CustomerID, NumberOfGuests = @NumberOfGuests,"
             +" ReservationDate = @Date WHERE ReservationID = @Id";
         
         using IDbConnection connection = _context.CreateConnection();
         var parameters = new DynamicParameters();
-        parameters.Add("LocationID", reservationRequest.LocationId, DbType.Guid);
+        parameters.Add("LocationTimeSlotID", reservationRequest.LocationTimeSlotId, DbType.Guid);
         parameters.Add("CustomerID", reservationRequest.CustomerId, DbType.Guid);
         parameters.Add("NumberOfGuests", reservationRequest.NumberOfPeople, DbType.Int32);
         parameters.Add("Date", reservationRequest.ReservationDate, DbType.DateTime);

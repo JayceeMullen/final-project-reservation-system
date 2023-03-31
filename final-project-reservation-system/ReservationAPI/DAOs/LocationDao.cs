@@ -42,7 +42,7 @@ public class LocationDao : ILocationDao
         var query = $"SELECT * FROM Locations WHERE Name LIKE '%{name}%'";
         using IDbConnection connection = _context.CreateConnection();
         {
-            var location = await connection.QueryFirstOrDefaultAsync<Location>(query).ConfigureAwait(false);
+            Location? location = await connection.QueryFirstOrDefaultAsync<Location>(query).ConfigureAwait(false);
             return location;
         }
     }
@@ -53,7 +53,7 @@ public class LocationDao : ILocationDao
     {
         Guid locationToUpdate = GetLocationByName(name).Result.LocationID;
 
-        const string query = "UPDATE Locations SET Name = @Name, Capacity = @Capacity";
+        const string query = "UPDATE Locations SET Name = @Name, Capacity = @Capacity WHERE LocationID = @LocationID";
         using IDbConnection connection = _context.CreateConnection();
         var parameters = new DynamicParameters();
 

@@ -121,5 +121,7 @@ public class ReservationsDao : IReservationsDao
         parameters.Add("NumberOfGuests", reservationRequest.NumberOfGuests, DbType.Int32);
         parameters.Add("Date", reservationRequest.ReservationDate, DbType.DateTime);
         parameters.Add("ReservationId", id, DbType.Guid);
+        
+        await connection.ExecuteAsync(query, parameters);
     }
 }

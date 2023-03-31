@@ -3,109 +3,108 @@ using ReservationAPI.DAOs;
 using ReservationAPI.Interfaces;
 using ReservationAPI.Models;
 
-namespace ReservationAPI.Controllers
+namespace ReservationAPI.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+
+public class CustomerController : ControllerBase, ICustomerController
 {
-    [ApiController]
-    [Route("[controller]")]
+    private readonly CustomerDao _customerDao;
 
-    public class CustomerController : ControllerBase, ICustomerController
+    public CustomerController(CustomerDao customerDao)
     {
-        private readonly CustomerDao _customerDao;
+        _customerDao = customerDao;
+    }
 
-        public CustomerController(CustomerDao customerDao)
+    //CREATE
+    [HttpPost]
+    [Route("")]
+    public async Task<IActionResult> CreateCustomer([FromBody] CustomerRequest newCustomer)
+    {
+        try
         {
-            _customerDao = customerDao;
+            await _customerDao.CreateCustomer(newCustomer);
+            return StatusCode(201);
         }
-
-        //CREATE
-        [HttpPost]
-        [Route("")]
-        public async Task<IActionResult> CreateCustomer([FromBody] CustomerRequest newCustomer)
+        catch (Exception e)
         {
-            try
-            {
-                await _customerDao.CreateCustomer(newCustomer);
-                return StatusCode(201);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            return StatusCode(500, e.Message);
         }
+    }
 
-        //READ
-        [HttpGet]
-        [Route("")]
-        public async Task<IActionResult> GetCustomers()
+    //READ
+    [HttpGet]
+    [Route("")]
+    public async Task<IActionResult> GetCustomers()
+    {
+        try
         {
-            try
-            {
-                IEnumerable<Customer> customers = await _customerDao.GetCustomers();
-                return Ok(customers);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            IEnumerable<Customer> customers = await _customerDao.GetCustomers();
+            return Ok(customers);
         }
-
-        [HttpGet]
-        [Route("{phoneNumber}")]
-        public async Task<IActionResult> GetCustomerByPhoneNumber([FromRoute] string phoneNumber)
+        catch (Exception e)
         {
-            try
-            {
-                var customer = await _customerDao.GetCustomerByPhoneNumber(phoneNumber);
-                if (customer == null)
-                {
-                    return StatusCode(404);
-                }
-                return Ok(customer);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            return StatusCode(500, e.Message);
         }
+    }
 
-        //UPDATE - CHECK THIS!
-
-        [HttpPut]
-        [Route("/UpdateByPhoneNumber/{phoneNumber}")]
-        public async Task<IActionResult> UpdateCustomerByPhoneNumber([FromRoute] string phoneNumber, [FromBody] CustomerRequest customerRequest)
+    [HttpGet]
+    [Route("{phoneNumber}")]
+    public async Task<IActionResult> GetCustomerByPhoneNumber([FromRoute] string phoneNumber)
+    {
+        try
         {
-            try
+            var customer = await _customerDao.GetCustomerByPhoneNumber(phoneNumber);
+            if (customer == null)
             {
-                await _customerDao.UpdateCustomerByPhoneNumber(phoneNumber, customerRequest);
-                return StatusCode(204);
+                return StatusCode(404);
             }
-            catch (Exception e) 
-            {
-                return StatusCode(500, e.Message);
-            }
+            return Ok(customer);
         }
-
-
-        //DELETE
-
-        [HttpDelete]
-        [Route("{phoneNumber}")]
-        public async Task<IActionResult> DeleteCustomer([FromRoute] string phoneNumber)
+        catch (Exception e)
         {
-            try
+            return StatusCode(500, e.Message);
+        }
+    }
+
+    //UPDATE - CHECK THIS!
+
+    [HttpPut]
+    [Route("/UpdateByPhoneNumber/{phoneNumber}")]
+    public async Task<IActionResult> UpdateCustomerByPhoneNumber([FromRoute] string phoneNumber, [FromBody] CustomerRequest customerRequest)
+    {
+        try
+        {
+            await _customerDao.UpdateCustomerByPhoneNumber(phoneNumber, customerRequest);
+            return StatusCode(204);
+        }
+        catch (Exception e) 
+        {
+            return StatusCode(500, e.Message);
+        }
+    }
+
+
+    //DELETE
+
+    [HttpDelete]
+    [Route("{phoneNumber}")]
+    public async Task<IActionResult> DeleteCustomer([FromRoute] string phoneNumber)
+    {
+        try
+        {
+            var customer = await _customerDao.GetCustomerByPhoneNumber(phoneNumber);
+            if (customer == null)
             {
-                var customer = await _customerDao.GetCustomerByPhoneNumber(phoneNumber);
-                if (customer == null)
-                {
-                    return StatusCode(404);
-                }
-                await _customerDao.DeleteCustomer(phoneNumber);
-                return StatusCode(200);
+                return StatusCode(404);
             }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            await _customerDao.DeleteCustomer(phoneNumber);
+            return StatusCode(200);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, e.Message);
         }
     }
 }

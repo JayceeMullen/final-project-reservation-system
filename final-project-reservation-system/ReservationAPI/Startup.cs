@@ -20,6 +20,7 @@ public class Startup
             services.AddScoped<ReservationsDao>();
             services.AddScoped<LocationDao>();
             services.AddScoped<CustomerDao>();
+            services.AddScoped<TimeSlotsDao>();
             services.AddControllers();
 
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo

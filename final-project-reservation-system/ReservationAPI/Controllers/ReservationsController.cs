@@ -96,6 +96,21 @@ public class ReservationsController : ControllerBase, IReservationsController
         }
     }
     
+    [HttpGet]
+    [Route("GetReservationsByTimeSlotId/{id:guid}")]
+    public async Task<IActionResult> GetReservationsByTimeSlotId(Guid id)
+    {
+        try
+        {
+            IEnumerable<Reservation> reservations =  await _reservationsDao.GetReservationsByTimeSlotId(id);
+            return Ok(reservations);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, e.Message);
+        }
+    }
+    
     //Update
     
     [HttpPut]

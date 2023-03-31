@@ -1,7 +1,7 @@
 USE [ReservationSystem]
 GO
 
-/****** Object:  StoredProcedure [dbo].[ValidateReservation]    Script Date: 3/31/2023 11:18:21 AM ******/
+/****** Object:  StoredProcedure [dbo].[ValidateReservation]    Script Date: 3/31/2023 1:53:17 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -11,7 +11,8 @@ GO
 
 
 
-CREATE OR ALTER   PROCEDURE [dbo].[ValidateReservation] @LocationTimeSlotID nvarchar(100), @ReservationDate Date, @NumberOfGuests int
+
+CREATE OR ALTER     PROCEDURE [dbo].[ValidateReservation] @LocationTimeSlotID nvarchar(100), @ReservationDate Date, @NumberOfGuests int
 AS
 
 DECLARE @Capacity AS int 
@@ -30,11 +31,11 @@ SELECT	@CurrentReservedGuests = SUM(r.NumberOfGuests)
 	WHERE r.LocationTimeSlotID = @LocationTimeSlotID 
 		AND ReservationDate = @ReservationDate
 
-RETURN (
+SELECT CAST((
 	SELECT CASE
 		WHEN (@CurrentReservedGuests + @NumberOfGuests) > @Capacity THEN 0
 		ELSE 1
-	END)
+	END) AS Bit)
 
 GO
 

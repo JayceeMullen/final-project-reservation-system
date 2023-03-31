@@ -24,55 +24,75 @@ public class ReservationsDao : IReservationsDao
 
     public async Task CreateReservation(ReservationRequest reservationRequest)
     {
-        const string query =
-            "INSERT INTO Reservations (LocationTimeSlotID, CustomerID, NumberOfGuests, ReservationDate)" 
-            + " VALUES (@LocationTimeSlotID, @CustomerID, @NumberOfGuests, @Date)";
-        
+        bool isValidReservation = await ValidateReservation(reservationRequest);
+
+        if (isValidReservation)
+        {
+            const string query =
+                "INSERT INTO Reservations (LocationTimeSlotID, CustomerID, NumberOfGuests, ReservationDate)"
+                + " VALUES (@LocationTimeSlotID, @CustomerID, @NumberOfGuests, @Date)";
+            using IDbConnection connection = _context.CreateConnection();
+            var parameters = new DynamicParameters();
+            parameters.Add("LocationTimeSlotID", reservationRequest.LocationTimeSlotId, DbType.Guid);
+            parameters.Add("CustomerID", reservationRequest.CustomerId, DbType.Guid);
+            parameters.Add("NumberOfGuests", reservationRequest.NumberOfGuests, DbType.Int32);
+            parameters.Add("Date", reservationRequest.ReservationDate, DbType.DateTime);
+
+            await connection.ExecuteAsync(query, parameters);
+        }
+        else
+        {
+            throw new Exception("Reservation not valid! Please check the number of guests and the selected time slot");
+        }
+    }
+
+    private async Task<bool> ValidateReservation(ReservationRequest reservationRequest)
+    {
+        const string validateQuery = "EXEC ValidateReservation @LocationTimeSlotID, @ReservationDate, @NumberOfGuests";
         using IDbConnection connection = _context.CreateConnection();
         var parameters = new DynamicParameters();
         parameters.Add("LocationTimeSlotID", reservationRequest.LocationTimeSlotId, DbType.Guid);
-        parameters.Add("CustomerID", reservationRequest.CustomerId, DbType.Guid);
-        parameters.Add("NumberOfGuests", reservationRequest.NumberOfPeople, DbType.Int32);
-        parameters.Add("Date", reservationRequest.ReservationDate, DbType.DateTime);
-
-        await connection.ExecuteAsync(query, parameters);
+        parameters.Add("ReservationDate", reservationRequest.ReservationDate, DbType.DateTime);
+        parameters.Add("NumberOfGuests", reservationRequest.NumberOfGuests, DbType.Int32);
+        var result = await connection.QueryFirstOrDefaultAsync<bool>(validateQuery, parameters);
+        return result;
     }
 
     public async Task DeleteReservation(Guid id)
     {
-        const string query = "DELETE FROM Reservations WHERE ReservationID = @Id";
+        const string query = "DELETE FROM Reservations WHERE ReservationID = @ReservationId";
         using IDbConnection connection = _context.CreateConnection();
         var parameters = new DynamicParameters();
-        parameters.Add("Id", id, DbType.Guid);
+        parameters.Add("ReservationId", id, DbType.Guid);
         await connection.ExecuteAsync(query, parameters);
     }
 
     public async Task<Reservation> GetReservationsById(Guid id)
     {
-        const string query = "SELECT * FROM Reservations WHERE ReservationID = @Id";
+        const string query = "SELECT * FROM Reservations WHERE ReservationID = @ReservationId";
         using IDbConnection connection = _context.CreateConnection();
         var parameters = new DynamicParameters();
-        parameters.Add("Id", id, DbType.Guid);
+        parameters.Add("ReservationId", id, DbType.Guid);
         var reservation = await connection.QueryFirstOrDefaultAsync<Reservation>(query, parameters);
         return reservation;
     }
 
     public async Task<IEnumerable<Reservation>> GetReservationsByCustomerId(Guid id)
     {
-        const string query = "SELECT * FROM Reservations WHERE CustomerID = @Id";
+        const string query = "SELECT * FROM Reservations WHERE CustomerID = @ReservationId";
         using IDbConnection connection = _context.CreateConnection();
         var parameters = new DynamicParameters();
-        parameters.Add("Id", id, DbType.Guid);
+        parameters.Add("ReservationId", id, DbType.Guid);
         IEnumerable<Reservation>? reservations = await connection.QueryAsync<Reservation>(query, parameters);
         return reservations;
     }
 
     public async Task<IEnumerable<Reservation>> GetReservationsByTimeSlotId(Guid id)
     {
-        const string query = "SELECT * FROM Reservations WHERE LocationTimeSlotID = @Id";
+        const string query = "SELECT * FROM Reservations WHERE LocationTimeSlotID = @ReservationId";
         using IDbConnection connection = _context.CreateConnection();
         var parameters = new DynamicParameters();
-        parameters.Add("Id", id, DbType.Guid);
+        parameters.Add("ReservationId", id, DbType.Guid);
         IEnumerable<Reservation> reservations = await connection.QueryAsync<Reservation>(query, parameters);
         return reservations.ToList();
     }
@@ -92,14 +112,14 @@ public class ReservationsDao : IReservationsDao
         }
         const string query =
             "UPDATE Reservations SET LocationTimeSlotID = @LocationTimeSlotID, CustomerID = @CustomerID, NumberOfGuests = @NumberOfGuests,"
-            +" ReservationDate = @Date WHERE ReservationID = @Id";
+            +" ReservationDate = @Date WHERE ReservationID = @ReservationId";
         
         using IDbConnection connection = _context.CreateConnection();
         var parameters = new DynamicParameters();
         parameters.Add("LocationTimeSlotID", reservationRequest.LocationTimeSlotId, DbType.Guid);
         parameters.Add("CustomerID", reservationRequest.CustomerId, DbType.Guid);
-        parameters.Add("NumberOfGuests", reservationRequest.NumberOfPeople, DbType.Int32);
+        parameters.Add("NumberOfGuests", reservationRequest.NumberOfGuests, DbType.Int32);
         parameters.Add("Date", reservationRequest.ReservationDate, DbType.DateTime);
-        parameters.Add("Id", id, DbType.Guid);
+        parameters.Add("ReservationId", id, DbType.Guid);
     }
 }

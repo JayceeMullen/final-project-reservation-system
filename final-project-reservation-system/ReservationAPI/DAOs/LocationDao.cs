@@ -66,19 +66,9 @@ public class LocationDao : ILocationDao
     
     public async Task PatchLocationByName(string name, string? newName, int? newCapacity)
     {
-        var sb = new StringBuilder();
-        sb.Append("UPDATE Locations SET ");
-        if (newName != null)
-        {
-            sb.Append($"Name = '{newName}'");
-        }
-        if (newCapacity != null)
-        {
-            sb.Append($"Capacity = '{newCapacity}'");
-        }
-        sb.Append($"WHERE Name LIKE '%{name}%'");
-
-        var query = sb.ToString();
+        Location locationToUpdate = GetLocationByName(name).Result;
+        
+        var query = $"UPDATE Locations SET Name = '{newName ?? locationToUpdate.Name}', Capacity = '{newCapacity ?? locationToUpdate.Capacity}' WHERE LocationID = '{locationToUpdate.LocationID}'";
         using IDbConnection connection = _context.CreateConnection();
         {
             await connection.ExecuteAsync(query);
